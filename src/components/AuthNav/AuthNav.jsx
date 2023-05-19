@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import css from "./AuthNav.module.css";
 import { NavLink } from "react-router-dom";
 
