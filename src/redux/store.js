@@ -1,8 +1,10 @@
-import persistReducer from "redux-persist/es/persistReducer";
+// import persistReducer from "redux-persist/es/persistReducer";
 import { filtersReducer } from "./reducer";
 import { tasksReducer } from "./taskSlice";
 import storage from "redux-persist/lib/storage";
 import {
+  persistStore,
+  persistReducer,
   FLUSH,
   PAUSE,
   PERSIST,
@@ -11,6 +13,7 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import { authReducer } from "./auth/slice";
+// import persistStore from "redux-persist/es/persistStore";
 
 const { configureStore } = require("@reduxjs/toolkit");
 
@@ -20,13 +23,6 @@ const authPersistConfig = {
   // its default in persist. It's localstorage
   storage,
   whitelist: ["token"],
-};
-
-// I don't want to refresh site if one of this elems will be done
-const middleware = {
-  serializableCheck: {
-    ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-  },
 };
 
 // After using resist I dont need to read data from initial state after every refresh site, so I must change store
@@ -40,5 +36,8 @@ export const store = configureStore({
   },
   // I write it to no refresh app after routing some data:
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(middleware),
+    getDefaultMiddleware({ serializableCheck: false }),
 });
+
+// I need this to persist in index.js
+export const persistor = persistStore(store);
